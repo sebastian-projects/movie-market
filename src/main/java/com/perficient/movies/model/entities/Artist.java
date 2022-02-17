@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,4 +19,9 @@ public class Artist extends Person implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
 
+    public Artist(String name, String lastName, String bio, Boolean isActive) {
+        super(name, lastName);
+        this.bio = bio;
+        this.isActive = isActive;
+    }
 }
