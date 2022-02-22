@@ -1,4 +1,4 @@
 package com.perficient.movies.services;
 
-public class DirectorService {
+public interface DirectorService {
 }

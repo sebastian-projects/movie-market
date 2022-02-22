@@ -1,5 +1,6 @@
 package com.perficient.movies.model.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,9 +15,11 @@ import java.util.List;
 @Setter
 public class Artist extends Person implements Serializable {
 
+    @NotNull
     private String bio;
 
     @Column(name = "is_active")
+    @NotNull
     private Boolean isActive;
 
     public Artist(String name, String lastName, String bio, Boolean isActive) {

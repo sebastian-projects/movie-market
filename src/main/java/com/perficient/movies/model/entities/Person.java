@@ -1,5 +1,6 @@
 package com.perficient.movies.model.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,8 +17,10 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     @Column(name = "last_name")
     private String lastName;
 

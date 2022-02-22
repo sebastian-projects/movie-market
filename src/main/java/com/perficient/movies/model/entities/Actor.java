@@ -1,10 +1,9 @@
 package com.perficient.movies.model.entities;
 
+import com.sun.istack.NotNull;
 import lombok.*;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -17,9 +16,11 @@ import java.io.Serializable;
 public class Actor extends Artist implements Serializable {
 
     @Column(name = "start_year")
+    @NotNull
     private int startYear;
 
     @Column(name = "biggest_role")
+    @NotNull
     private String biggestRole;
 
     public Actor(String name, String lastName, String bio, Boolean isActive, int startYear, String biggestRole) {
