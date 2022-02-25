@@ -1,6 +1,6 @@
 package com.perficient.movies.model.mappers;
 
-import com.perficient.movies.model.dtos.ActorDTO;
+import com.perficient.movies.model.dtos.ActorDto;
 import com.perficient.movies.model.entities.Actor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 public interface ActorMapper {
     ActorMapper INSTANCE = Mappers.getMapper(ActorMapper.class);
 
-    Actor toEntity(ActorDTO actorDTO);
+    Actor toEntity(ActorDto actorDto);
 
-    ActorDTO toDTO(Actor actor);
+    ActorDto toDto(Actor actor);
 
-    default List<ActorDTO> toDTOList(List<Actor> actorList) {
+    default List<ActorDto> toDtoList(List<Actor> actorList) {
         if (actorList == null) {
             return new ArrayList<>();
         }
         return actorList.stream()
-                .map(this::toDTO)
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 }

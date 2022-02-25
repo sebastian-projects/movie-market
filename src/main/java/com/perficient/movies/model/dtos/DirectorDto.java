@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class ActorDTO {
+public class DirectorDto {
 
     private String name;
 
@@ -17,7 +17,7 @@ public class ActorDTO {
 
     private boolean isActive;
 
-    private int startYear;
+    private String mainGender;
 
-    private String biggestRole;
+    private boolean hasDirectedSeries;
 }

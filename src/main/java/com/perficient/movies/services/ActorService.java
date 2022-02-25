@@ -1,6 +1,5 @@
 package com.perficient.movies.services;
 
-import com.perficient.movies.model.dtos.ActorDTO;
 import com.perficient.movies.model.entities.Actor;
 
 import java.util.Collection;

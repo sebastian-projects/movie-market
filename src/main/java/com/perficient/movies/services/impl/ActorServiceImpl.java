@@ -1,13 +1,11 @@
 package com.perficient.movies.services.impl;
 
 import com.perficient.movies.exceptions.BusinessException;
-import com.perficient.movies.model.dtos.ActorDTO;
+import com.perficient.movies.exceptions.ErrorCodesEnum;
 import com.perficient.movies.model.entities.Actor;
-import com.perficient.movies.model.mappers.ActorMapper;
 import com.perficient.movies.repositories.ActorRepository;
 import com.perficient.movies.services.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Actor findActor(Long id) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Actor not found."));
+        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         return actorById;
     }
@@ -43,12 +41,12 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void editActor(Long id, Actor actor) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Actor not found."));
+        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         actorById.setName(actor.getName());
         actorById.setLastName(actor.getLastName());
         actorById.setBio(actor.getBio());
-        actorById.setIsActive(actor.getIsActive());
+        actorById.setActive(actor.isActive());
         actorById.setBiggestRole(actor.getBiggestRole());
         actorById.setStartYear(actor.getStartYear());
 
@@ -57,7 +55,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void deleteActor(Long id) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Actor not found."));
+        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         actorRepository.delete(actorById);
     }
