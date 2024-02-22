@@ -1,23 +1,38 @@
 package com.perficient.movies.model.entities;
 
-import lombok.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-import javax.persistence.*;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.Column;
+import javax.persistence.InheritanceType;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class Artist extends Person implements Serializable {
 
+    @NotNull
+    @NotEmpty
     private String bio;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    @NotNull
+    private boolean isActive;
 
+    public Artist(String name, String lastName, String bio, boolean isActive) {
+        super(name, lastName);
+        this.bio = bio;
+        this.isActive = isActive;
+    }
 }
