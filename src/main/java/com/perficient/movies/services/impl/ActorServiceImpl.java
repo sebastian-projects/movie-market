@@ -2,6 +2,7 @@ package com.perficient.movies.services.impl;
 
 import com.perficient.movies.exceptions.BusinessException;
 import com.perficient.movies.exceptions.ErrorCodesEnum;
+import com.perficient.movies.model.dtos.ActorDto;
 import com.perficient.movies.model.entities.Actor;
 import com.perficient.movies.repositories.ActorRepository;
 import com.perficient.movies.services.ActorService;
@@ -13,14 +14,16 @@ import java.util.Collection;
 
 @Service
 @Transactional
-public class ActorServiceImpl implements ActorService {
+public class ActorServiceImpl implements ActorService<Actor> {
+
+    private static final String ERROR = "Error";
 
     @Autowired
     private ActorRepository actorRepository;
 
     @Override
-    public Actor createActor(String name, String lastName, String bio, boolean isActive, String biggestRole, int startYear) {
-        Actor actor = new Actor(name, lastName, bio, isActive, startYear, biggestRole);
+    public Actor createActor(Actor actorParam) {
+        Actor actor = actorParam;
 
         actorRepository.save(actor);
 
@@ -29,9 +32,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public Actor findActor(Long id) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
-
-        return actorById;
+        return actorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND));
     }
 
     @Override
@@ -41,7 +42,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void editActor(Long id, Actor actor) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
+        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         actorById.setName(actor.getName());
         actorById.setLastName(actor.getLastName());
@@ -55,7 +56,7 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void deleteActor(Long id) {
-        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
+        Actor actorById = actorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         actorRepository.delete(actorById);
     }

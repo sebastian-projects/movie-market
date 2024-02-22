@@ -1,13 +1,14 @@
 package com.perficient.movies.services;
 
 import com.perficient.movies.model.dtos.MovieDto;
+import com.perficient.movies.model.entities.Movie;
 
 import java.util.Collection;
 import java.util.Date;
 
 public interface MovieService<T> {
 
-    T createMovie(String name, int duration, String plot, Date releaseDate);
+    T createMovie(Movie movie);
 
     T findMovie(Long id);
 

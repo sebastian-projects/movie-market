@@ -1,5 +1,7 @@
 package com.perficient.movies.controllers;
 
+import com.perficient.movies.model.dtos.ActorDto;
+import com.perficient.movies.model.dtos.DirectorDto;
 import com.perficient.movies.model.dtos.MovieDto;
 import com.perficient.movies.model.entities.Actor;
 import com.perficient.movies.model.entities.Director;
@@ -32,68 +34,67 @@ public class MovieController {
     private DirectorMapper directorMapper;
 
     @PostMapping
-    public ResponseEntity<?> createMovie(@RequestBody MovieDto movieRequest) {
+    public ResponseEntity<String> createMovie(@RequestBody MovieDto movieRequest) {
 
-        movieService.createMovie(movieRequest.getName(), movieRequest.getDuration(),
-                movieRequest.getPlot(), movieRequest.getReleaseDate());
+        movieService.createMovie(movieMapper.toEntity(movieRequest));
 
         return new ResponseEntity<>("Movie created.", HttpStatus.CREATED);
     }
 
     @GetMapping("/{movie_id}")
-    public ResponseEntity<?> findMovie(@PathVariable("movie_id") Long movieId) {
-        return new ResponseEntity<>(movieService.findMovie(movieId), HttpStatus.ACCEPTED);
+    public ResponseEntity<MovieDto> findMovie(@PathVariable("movie_id") Long movieId) {
+        return new ResponseEntity<>(movieMapper.toDto((Movie) movieService.findMovie(movieId)), HttpStatus.OK);
     }
 
     @PutMapping("/{movie_id}")
-    public ResponseEntity<?> editMovie(@PathVariable("movie_id") Long movieId, @RequestBody MovieDto movieDto) {
+    public ResponseEntity<String> editMovie(@PathVariable("movie_id") Long movieId, @RequestBody MovieDto movieDto) {
         movieService.editMovie(movieId, movieDto);
-        return new ResponseEntity<>("Movie update.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Movie update.", HttpStatus.OK);
     }
 
     @DeleteMapping("/{movie_id}")
-    public ResponseEntity<?> removeMovie(@PathVariable("movie_id") Long movieId) {
+    public ResponseEntity<String> removeMovie(@PathVariable("movie_id") Long movieId) {
         movieService.deleteMovie(movieId);
-        return new ResponseEntity<>("Movie deleted.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Movie deleted.", HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllMovies() {
-        return new ResponseEntity<>(movieMapper.toDtoList((List<Movie>) movieService.findAllMovies()), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<MovieDto>> findAllMovies() {
+        return new ResponseEntity<>(movieMapper.toDtoList((List<Movie>) movieService.findAllMovies()), HttpStatus.OK);
     }
 
-    @PatchMapping("/{movie_id}/add-actor/{actor_id}")
-    public ResponseEntity<?> addActor(@PathVariable("movie_id") Long movieId, @PathVariable("actor_id") Long actorId) {
+    @PatchMapping("/{movie_id}/actors/{actor_id}")
+    public ResponseEntity<String> addActor(@PathVariable("movie_id") Long movieId, @PathVariable("actor_id") Long actorId) {
         movieService.addActor(movieId, actorId);
-        return new ResponseEntity<>("Actor added.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Actor added.", HttpStatus.OK);
     }
 
-    @PatchMapping("/{movie_id}/add-director/{director_id}")
-    public ResponseEntity<?> addDirector(@PathVariable("movie_id") Long movieId, @PathVariable("director_id") Long directorId) {
+    @PatchMapping("/{movie_id}/directors/{director_id}")
+    public ResponseEntity<String> addDirector(@PathVariable("movie_id") Long movieId, @PathVariable("director_id") Long directorId) {
         movieService.addDirector(movieId, directorId);
-        return new ResponseEntity<>("Director added.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Director added.", HttpStatus.OK);
     }
 
-    @PatchMapping("/{movie_id}/remove-actor/{actor_id}")
-    public ResponseEntity<?> removeActor(@PathVariable("movie_id") Long movieId, @PathVariable("actor_id") Long actorId) {
+    @DeleteMapping("/{movie_id}/actors/{actor_id}")
+    public ResponseEntity<String> removeActor(@PathVariable("movie_id") Long movieId, @PathVariable("actor_id") Long actorId) {
         movieService.removeActor(movieId, actorId);
-        return new ResponseEntity<>("Actor has been removed.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Actor has been removed.", HttpStatus.OK);
     }
 
-    @PatchMapping("/{movie_id}/remove-director/{director_id}")
-    public ResponseEntity<?> removeDirector(@PathVariable("movie_id") Long movieId, @PathVariable("director_id") Long directorId) {
+    @DeleteMapping("/{movie_id}/directors/{director_id}")
+    public ResponseEntity<String> removeDirector(@PathVariable("movie_id") Long movieId, @PathVariable("director_id") Long directorId) {
         movieService.removeDirector(movieId, directorId);
-        return new ResponseEntity<>("Director has been removed.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Director has been removed.", HttpStatus.OK);
     }
 
     @GetMapping("/{movie_id}/actors")
-    public ResponseEntity<?> actorsFromMovie(@PathVariable("movie_id") Long movieId) {
-        return new ResponseEntity<>(actorMapper.toDtoList((List<Actor>) movieService.actorsFromMovie(movieId)), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<ActorDto>> actorsFromMovie(@PathVariable("movie_id") Long movieId) {
+        return new ResponseEntity<>(actorMapper.toDtoList((List<Actor>) movieService.actorsFromMovie(movieId)), HttpStatus.OK);
     }
 
     @GetMapping("/{movie_id}/directors")
-    public ResponseEntity<?> directorsFromMovie(@PathVariable("movie_id") Long movieId) {
-        return new ResponseEntity<>(directorMapper.toDtoList((List<Director>) movieService.findDirectorsFromMovie(movieId)), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<DirectorDto>> directorsFromMovie(@PathVariable("movie_id") Long movieId) {
+        return new ResponseEntity<>(directorMapper.toDtoList((List<Director>) movieService.findDirectorsFromMovie(movieId)), HttpStatus.OK);
     }
 
 }

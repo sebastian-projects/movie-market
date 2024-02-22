@@ -14,15 +14,17 @@ import java.util.Collection;
 
 @Service
 @Transactional
-public class DirectorServiceImpl implements DirectorService {
+public class DirectorServiceImpl implements DirectorService<Director> {
+
+    private static final String ERROR = "Error";
 
     @Autowired
     DirectorRepository directorRepository;
 
     @Override
-    public Director createDirector(String name, String lastName, String bio, boolean isActive, String mainGender, boolean hasDirectedSeries) {
+    public Director createDirector(Director directorParam) {
 
-        Director director = new Director(name, lastName, bio, isActive, mainGender, hasDirectedSeries);
+        Director director = directorParam;
 
         directorRepository.save(director);
 
@@ -31,10 +33,7 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public Director findDirector(Long id) {
-
-        Director directorById = directorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND));
-
-        return directorById;
+        return directorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND));
     }
 
     @Override
@@ -45,7 +44,7 @@ public class DirectorServiceImpl implements DirectorService {
     @Override
     public void editDirector(Long id, DirectorDto director) {
 
-        Director directorById = directorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND));
+        Director directorById = directorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND));
 
         directorById.setName(director.getName());
         directorById.setLastName(director.getLastName());
@@ -54,11 +53,12 @@ public class DirectorServiceImpl implements DirectorService {
         directorById.setMainGender(director.getMainGender());
         directorById.setHasDirectedSeries(director.isHasDirectedSeries());
 
+        directorRepository.save(directorById);
     }
 
     @Override
     public void deleteDirector(Long id) {
-        Director directorById = directorRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND));
+        Director directorById = directorRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND));
 
         directorRepository.delete(directorById);
     }

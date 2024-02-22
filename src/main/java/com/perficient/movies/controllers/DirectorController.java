@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,41 +16,39 @@ import java.util.List;
 public class DirectorController {
 
     @Autowired
-    private DirectorService directorService;
+    private DirectorService<Director> directorService;
 
     @Autowired
     private DirectorMapper directorMapper;
 
     @PostMapping
-    public ResponseEntity<?> createDirector(@RequestBody DirectorDto directorRequest) {
+    public ResponseEntity<String> createDirector(@RequestBody Director director) {
 
-        directorService.createDirector(directorRequest.getName(), directorRequest.getLastName(),
-                directorRequest.getBio(), directorRequest.isActive(), directorRequest.getMainGender(),
-                directorRequest.isHasDirectedSeries());
+        directorService.createDirector(director);
 
         return new ResponseEntity<>("Director created.", HttpStatus.CREATED);
     }
 
     @GetMapping("/{director_id}")
-    public ResponseEntity<?> findDirector(@PathVariable("director_id") Long directorId) {
-        return new ResponseEntity<>(directorMapper.toDto((Director) directorService.findDirector(directorId)), HttpStatus.ACCEPTED);
+    public ResponseEntity<DirectorDto> findDirector(@PathVariable("director_id") Long directorId) {
+        return new ResponseEntity<>(directorMapper.toDto(directorService.findDirector(directorId)), HttpStatus.OK);
     }
 
     @PutMapping("/{director_id}")
-    public ResponseEntity<?> updateDirector(@PathVariable("director_id") Long directorId, @RequestBody DirectorDto directorRequest) {
+    public ResponseEntity<String> updateDirector(@PathVariable("director_id") Long directorId, @RequestBody DirectorDto directorRequest) {
         directorService.editDirector(directorId, directorRequest);
-        return new ResponseEntity<>("Director update.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Director update.", HttpStatus.OK);
     }
 
     @DeleteMapping("/{director_id}")
-    public ResponseEntity<?> deleteDirector(@PathVariable("director_id") Long directorId) {
+    public ResponseEntity<String> deleteDirector(@PathVariable("director_id") Long directorId) {
         directorService.deleteDirector(directorId);
-        return new ResponseEntity<>("Director deleted.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Director deleted.", HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllDirectors() {
-        return new ResponseEntity<>(directorMapper.toDtoList((List<Director>) directorService.findAllDirectors()), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<DirectorDto>> findAllDirectors() {
+        return new ResponseEntity<>(directorMapper.toDtoList((List<Director>) directorService.findAllDirectors()), HttpStatus.OK);
     }
 
 }

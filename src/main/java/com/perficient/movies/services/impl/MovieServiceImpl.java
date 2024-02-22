@@ -13,15 +13,15 @@ import com.perficient.movies.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @Transactional
-public class MovieServiceImpl implements MovieService {
+public class MovieServiceImpl implements MovieService<Movie> {
+
+    private static final String ERROR = "Error";
 
     @Autowired
     MovieRepository movieRepository;
@@ -33,9 +33,9 @@ public class MovieServiceImpl implements MovieService {
     DirectorRepository directorRepository;
 
     @Override
-    public Movie createMovie(String name, int duration, String plot, Date releaseDate) {
+    public Movie createMovie(Movie movieParam) {
 
-        Movie movie = new Movie(name, duration, plot, releaseDate);
+        Movie movie = movieParam;
 
         movieRepository.save(movie);
 
@@ -44,10 +44,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findMovie(Long id) {
-
-        Movie movieById = movieRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
-
-        return movieById;
+        return movieRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
     }
 
     @Override
@@ -58,27 +55,28 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void editMovie(Long id, MovieDto movie) {
 
-        Movie movieById = movieRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
         movieById.setName(movie.getName());
         movieById.setPlot(movie.getPlot());
         movieById.setDuration(movie.getDuration());
         movieById.setReleaseDate(movie.getReleaseDate());
 
+        movieRepository.save(movieById);
     }
 
     @Override
     public void deleteMovie(Long id) {
-        Movie movieById = movieRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
         movieRepository.delete(movieById);
     }
 
     @Override
     public void addActor(Long movieId, Long actorId) {
-        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
-        Actor actorById = actorRepository.findById(actorId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
+        Actor actorById = actorRepository.findById(actorId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND));
 
         movieById.getActors().add(actorById);
 
@@ -87,9 +85,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void addDirector(Long movieId, Long directorId) {
-        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
-        Director directorById = directorRepository.findById(directorId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND));
+        Director directorById = directorRepository.findById(directorId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND));
 
         movieById.getDirectors().add(directorById);
 
@@ -98,11 +96,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void removeActor(Long movieId, Long actorId) {
-        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
-        Actor actorById = actorRepository.findById(actorId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND));
+        Actor actorById = actorRepository.findById(actorId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND));
 
-        if (!movieById.getActors().contains(actorById)) throw new BusinessException("Error", ErrorCodesEnum.ACTOR_NOT_FOUND_IN_MOVIE);
+        if (!movieById.getActors().contains(actorById))
+            throw new BusinessException(ERROR, ErrorCodesEnum.ACTOR_NOT_FOUND_IN_MOVIE);
 
         movieById.getActors().remove(actorById);
 
@@ -111,11 +110,12 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void removeDirector(Long movieId, Long directorId) {
-        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND));
+        Movie movieById = movieRepository.findById(movieId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND));
 
-        Director directorById = directorRepository.findById(directorId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND));
+        Director directorById = directorRepository.findById(directorId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND));
 
-        if (!movieById.getDirectors().contains(directorById)) throw new BusinessException("Error", ErrorCodesEnum.DIRECTOR_NOT_FOUND_IN_MOVIE);
+        if (!movieById.getDirectors().contains(directorById))
+            throw new BusinessException(ERROR, ErrorCodesEnum.DIRECTOR_NOT_FOUND_IN_MOVIE);
 
         movieById.getDirectors().remove(directorById);
 

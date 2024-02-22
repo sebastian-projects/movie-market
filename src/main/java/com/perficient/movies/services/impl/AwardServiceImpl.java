@@ -16,7 +16,9 @@ import java.util.Collection;
 
 @Service
 @Transactional
-public class AwardServiceImpl implements AwardService {
+public class AwardServiceImpl implements AwardService<Award> {
+
+    private static final String ERROR = "Error";
 
     @Autowired
     AwardRepository awardRepository;
@@ -25,8 +27,8 @@ public class AwardServiceImpl implements AwardService {
     MovieRepository movieRepository;
 
     @Override
-    public Award createAward(String name, String organization, int year) {
-        Award award = new Award(name, organization, year);
+    public Award createAward(Award awardParam) {
+        Award award = awardParam;
 
         awardRepository.save(award);
 
@@ -35,10 +37,7 @@ public class AwardServiceImpl implements AwardService {
 
     @Override
     public Award findAward(Long id) {
-
-        Award awardById = awardRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.AWARD_NOT_FOUND));
-
-        return awardById;
+        return awardRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.AWARD_NOT_FOUND));
     }
 
     @Override
@@ -49,33 +48,34 @@ public class AwardServiceImpl implements AwardService {
     @Override
     public void editAward(Long id, AwardDto awardDto) {
 
-        Award awardById = awardRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.AWARD_NOT_FOUND));
+        Award awardById = awardRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.AWARD_NOT_FOUND));
 
         awardById.setName(awardDto.getName());
         awardById.setOrganization(awardDto.getOrganization());
         awardById.setYear(awardDto.getYear());
 
+        awardRepository.save(awardById);
     }
 
     @Override
     public void deleteAward(Long id) {
-        Award awardById = awardRepository.findById(id).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.AWARD_NOT_FOUND));
+        Award awardById = awardRepository.findById(id).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.AWARD_NOT_FOUND));
 
         awardRepository.delete(awardById);
     }
 
     @Override
     public void assignAward(Long awardId, Long movieId) {
-        Award awardById = awardRepository.findById(awardId).orElseThrow(() -> new BusinessException("Error", ErrorCodesEnum.AWARD_NOT_FOUND));
+        Award awardById = awardRepository.findById(awardId).orElseThrow(() -> new BusinessException(ERROR, ErrorCodesEnum.AWARD_NOT_FOUND));
 
-        Movie movieById = movieRepository.findById(movieId).orElseThrow((() -> new BusinessException("Error", ErrorCodesEnum.MOVIE_NOT_FOUND)));
+        Movie movieById = movieRepository.findById(movieId).orElseThrow((() -> new BusinessException(ERROR, ErrorCodesEnum.MOVIE_NOT_FOUND)));
 
-        if (awardById.getMovie() != null) throw new BusinessException("Error", ErrorCodesEnum.AWARD_ALREADY_HAS_A_WINNER);
+        if (awardById.getMovie() != null)
+            throw new BusinessException(ERROR, ErrorCodesEnum.AWARD_ALREADY_HAS_A_WINNER);
 
         awardById.setMovie(movieById);
 
         awardRepository.save(awardById);
-
     }
 
     @Override

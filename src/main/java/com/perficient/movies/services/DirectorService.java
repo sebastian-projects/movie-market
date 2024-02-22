@@ -1,11 +1,13 @@
 package com.perficient.movies.services;
 
 import com.perficient.movies.model.dtos.DirectorDto;
+import com.perficient.movies.model.entities.Director;
+
 import java.util.Collection;
 
 public interface DirectorService<T> {
 
-    T createDirector(String name, String lastName, String bio, boolean isActive, String mainGender, boolean hasDirectedSeries);
+    T createDirector(Director director);
 
     T findDirector(Long id);
 

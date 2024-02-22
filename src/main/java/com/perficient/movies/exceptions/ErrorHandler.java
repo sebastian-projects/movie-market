@@ -5,11 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ControllerAdvice
 public class ErrorHandler {

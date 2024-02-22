@@ -3,6 +3,7 @@ package com.perficient.movies.model.entities;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;

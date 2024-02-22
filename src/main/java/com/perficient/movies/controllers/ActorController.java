@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import javax.swing.*;
 import java.util.List;
 
 @RestController
@@ -24,41 +22,39 @@ import java.util.List;
 public class ActorController {
 
     @Autowired
-    private ActorService actorService;
+    private ActorService<Actor> actorService;
 
     @Autowired
     private ActorMapper actorMapper;
 
     @PostMapping
-    public ResponseEntity<?> createActor(@RequestBody ActorDto actorRequest) {
+    public ResponseEntity<String> createActor(@RequestBody Actor actorRequest) {
 
-        actorService.createActor(actorRequest.getName(), actorRequest.getLastName(),
-                actorRequest.getBio(), actorRequest.isActive(), actorRequest.getBiggestRole(),
-                actorRequest.getStartYear());
+        actorService.createActor(actorRequest);
 
         return new ResponseEntity<>("Actor created.", HttpStatus.CREATED);
     }
 
     @GetMapping("/{actor_id}")
-    public ResponseEntity<?> findActor(@PathVariable("actor_id") Long actorId) {
-        return new ResponseEntity<>(actorMapper.toDto((Actor) actorService.findActor(actorId)), HttpStatus.ACCEPTED);
+    public ResponseEntity<ActorDto> findActor(@PathVariable("actor_id") Long actorId) {
+        return new ResponseEntity<>(actorMapper.toDto(actorService.findActor(actorId)), HttpStatus.OK);
     }
 
     @PutMapping("/{actor_id}")
-    public ResponseEntity<?> updateActor(@PathVariable("actor_id") Long actorId, @RequestBody ActorDto actorRequest) {
+    public ResponseEntity<String> updateActor(@PathVariable("actor_id") Long actorId, @RequestBody ActorDto actorRequest) {
         actorService.editActor(actorId, actorMapper.toEntity(actorRequest));
-        return new ResponseEntity<>("Actor update.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Actor update.", HttpStatus.OK);
     }
 
     @DeleteMapping("/{actor_id}")
-    public ResponseEntity<?> deleteActor(@PathVariable("actor_id") Long actorId) {
+    public ResponseEntity<String> deleteActor(@PathVariable("actor_id") Long actorId) {
         actorService.deleteActor(actorId);
-        return new ResponseEntity<>("Actor deleted.", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("Actor deleted.", HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllActors() {
-        return new ResponseEntity<>(actorMapper.toDtoList((List<Actor>) actorService.findAllActors()), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<ActorDto>> findAllActors() {
+        return new ResponseEntity<>(actorMapper.toDtoList((List<Actor>) actorService.findAllActors()), HttpStatus.OK);
     }
 
 }
